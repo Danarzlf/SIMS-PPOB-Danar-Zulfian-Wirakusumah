@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
-// Cookie
 import Cookies from "js-cookie";
 
 // Components
@@ -13,16 +11,21 @@ import { fetchTransactions } from "../../store/transaction-slice";
 
 export const History = () => {
   const dispatch = useDispatch();
-  const { history, loading, error } = useSelector(
-    (state) => state.transaction
-  );
+  const { history, loading, error } = useSelector((state) => state.transaction);
+
+  const [offset, setOffset] = useState(0);
+  const limit = 5;
 
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
-      dispatch(fetchTransactions(token));
+      dispatch(fetchTransactions({ token, offset, limit }));
     }
-  }, [dispatch]);
+  }, [dispatch, offset]);
+
+  const handleShowMore = () => {
+    setOffset((prevOffset) => prevOffset + limit);
+  };
 
   return (
     <>
@@ -34,9 +37,7 @@ export const History = () => {
             <p className="font-medium text-black">Semua Transaksi</p>
 
             {loading && <p>Loading...</p>}
-            {error && (
-              <p className="text-red-500">Error: {error}</p>
-            )}
+            {error && <p className="text-red-500">Error: {error}</p>}
 
             {history.length > 0 ? (
               history.map((item, index) => (
@@ -80,6 +81,13 @@ export const History = () => {
             ) : (
               !loading && <p>Tidak ada riwayat transaksi.</p>
             )}
+
+              <button
+                className="text-center text-sm font-semibold text-orange-500 hover:text-red-500 active:text-red-600"
+                onClick={handleShowMore}
+              >
+                Show more
+              </button>
           </div>
         </div>
       </div>

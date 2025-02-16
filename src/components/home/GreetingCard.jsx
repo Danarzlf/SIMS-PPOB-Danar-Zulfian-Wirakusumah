@@ -40,12 +40,17 @@ export const GreetingCard = () => {
     <div className="flex w-full flex-col gap-4 md:flex-row md:gap-0">
       <div className="w-full md:w-[40%]">
         <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
-          <img
-            src={profile?.profile_image || ProfilePhoto}
-            alt="Foto Profil"
-            loading="lazy"
-            className="h-20 w-20 rounded-full border object-cover aspect-square md:h-16 md:w-16"
-          />
+        <img
+          src={
+            profile?.profile_image && profile.profile_image !== "https://minio.nutech-integrasi.com/take-home-test/null"
+              ? profile.profile_image
+              : ProfilePhoto
+          }
+          alt="Foto Profil"
+          loading="lazy"
+          className="h-20 w-20 rounded-full border object-cover aspect-square md:h-16 md:w-16"
+        />
+
 
           <div className="text-center md:text-left">
             <p className="text-base text-slate-500 mt-2 md:mt-4">

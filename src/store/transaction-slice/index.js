@@ -4,10 +4,10 @@ import axios from "axios";
 // Thunk untuk fetch riwayat transaksi
 export const fetchTransactions = createAsyncThunk(
   "transaction/fetchTransactions",
-  async (token, { rejectWithValue }) => {
+  async ({ token, offset = 0, limit = 5 }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "https://take-home-test-api.nutech-integrasi.com/transaction/history",
+        `https://take-home-test-api.nutech-integrasi.com/transaction/history?offset=${offset}&limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -15,7 +15,10 @@ export const fetchTransactions = createAsyncThunk(
         }
       );
       if (response.data.status === 0) {
-        return response.data.data.records;
+        return {
+          records: response.data.data.records,  // Data riwayat transaksi
+          offset: offset,  // Offset yang digunakan untuk pagination
+        };
       } else {
         return rejectWithValue(response.data.message);
       }
@@ -24,6 +27,7 @@ export const fetchTransactions = createAsyncThunk(
     }
   }
 );
+
 
 // Thunk untuk fetch saldo
 export const fetchBalance = createAsyncThunk(
@@ -114,18 +118,24 @@ const transactionSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTransactions.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchTransactions.fulfilled, (state, action) => {
-        state.loading = false;
-        state.history = action.payload;
-      })
-      .addCase(fetchTransactions.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+    .addCase(fetchTransactions.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchTransactions.fulfilled, (state, action) => {
+      state.loading = false;
+      
+      // Cek apakah ini fetch pertama kali (offset 0)
+      if (action.payload.offset === 0) {
+        state.history = action.payload.records; // Ganti data history
+      } else {
+        state.history = [...state.history, ...action.payload.records]; // Tambah data untuk load more
+      }
+    })
+    .addCase(fetchTransactions.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
       .addCase(fetchBalance.pending, (state) => {
         state.loading = true;
         state.error = null;

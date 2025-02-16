@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 // Images
 import ProfilePhoto from "../../assets/img/ProfilePhoto.png";
-import BackgroundSaldo from "../../assets/img/Background-Saldo.png"; // Tambahkan ini
+import BackgroundSaldo from "../../assets/img/BackgroundSaldo.png"; // Tambahkan ini
 
 // Icons
 import { FaEye, FaEyeSlash } from "react-icons/fa";

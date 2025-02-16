@@ -29,11 +29,11 @@ Follow these steps to set up and run the project on your local machine.
 ### Installation
 1. Clone the repo
    ```sh
-   git clone https://github.com/Danarzlf/Test-Job-FE.git
+   git clone https://github.com/Danarzlf/SIMS-PPOB-Danar-Zulfian-Wirakusumah.git
    ```
 2. Navigate to the project directory
    ```js
-   cd test-job-fe
+   cd SIMS-PPOB-Danar-Zulfian-Wirakusumah
    ```
 3. Install NPM packages
    ```sh
